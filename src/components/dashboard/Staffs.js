@@ -11,10 +11,6 @@ export const Staffs = (props) => {
 
    
     async function FetchData(){
-    
-        // e.preventDefault();
-    
-         
         let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
           method:'GET',
           headers:{
@@ -25,7 +21,6 @@ export const Staffs = (props) => {
          
         })
            const  res = await result.json()
-            console.log("result", res.data)
             localStorage.setItem("teacher-info",JSON.stringify(res))
       
     }

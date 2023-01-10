@@ -7,13 +7,6 @@ import { useEffect } from 'react';
 
 
 
-
-
-
-
-
-// const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));
-
 export const RegStudent = (props) => {
 
     const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));

@@ -100,9 +100,7 @@ async function FetchData(){
    
   async function FetchDataTeacher(){
     const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
-const token = userInfo.token
-      // e.preventDefault();
-  
+   const token = userInfo.token
        
       let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
         method:'GET',

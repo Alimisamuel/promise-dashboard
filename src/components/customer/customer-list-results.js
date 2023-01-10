@@ -37,10 +37,6 @@ useEffect( ()=>{
 
 
 async function FetchData(){
-
-    // e.preventDefault();
-
-     
     let result  = await fetch("https://alimisamuel.com/api/v1/student",{
       method:'GET',
       headers:{
@@ -53,7 +49,6 @@ async function FetchData(){
        const  res = await result.json()
         console.log("result", res.data)
         localStorage.setItem("student-info",JSON.stringify(res))
-  
 }
 FetchData()
 }, [token])

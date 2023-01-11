@@ -257,6 +257,7 @@ export const AccountProfileCreate = (props) => {
   const [lGA, setLGA] = useState('')
   const [yoa, setYoa] = useState('')
   const [teacher_id, setTeacher_id] = useState()
+  const [password,setPassword] = useState('')
 
   const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
   console.log(userInfo.token)
@@ -288,7 +289,7 @@ const route = useRouter()
   const handleStaff =  async () =>{
     // e.preventDefault();
 
-      let item = {firstName, lastName,email, number, state, teacher_id, DOB}
+      let item = {firstName, lastName,email,password, number, state,DOB}
     let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
       method:'POST',
       body: JSON.stringify(item),

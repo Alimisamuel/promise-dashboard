@@ -12,8 +12,8 @@ export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const authContext = useContext(AuthContext);
 
-  const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
-  console.log(userInfo.admin)
+  const userInfo = JSON.parse(window.localStorage.getItem('user-info')).data;
+ 
   
   const handleLogout = () =>{
     router.push('/login')
@@ -84,7 +84,7 @@ export const AccountPopover = (props) => {
         </Link>
         <Typography color="text.secondary" 
         variant="body2">
-          {userInfo.admin}
+          {userInfo.IsAdmin}
         </Typography>
       </Box>
       <MenuList

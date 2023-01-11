@@ -22,25 +22,20 @@ import { getInitials } from '../../utils/get-initials';
 export const TeacherListResults = ({ customers, ...rest }) => {
 
 
-    const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
+const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
  
 
   const [ studentData, setStudentData] = useState([])
   const [selectedCustomerIds, setSelectedCustomerIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
+  const [teacher,setTeacher] = useState([])
 
   const token = userInfo.token
 
 useEffect( ()=>{
-
-   
 async function FetchData(){
-
-    // e.preventDefault();
-
-     
-    let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
+    let result  = await fetch("https://alimisamuel.com/api/v1/teacher",{
       method:'GET',
       headers:{
          "Content-Type":"application/json ",
@@ -49,19 +44,13 @@ async function FetchData(){
       } ,
      
     })
-       const  res = await result.json()
-        console.log("result", res.data)
-        localStorage.setItem("teacher-info",JSON.stringify(res))
-  
+       const res = await result.json()
+      setTeacher(res.data) 
 }
 FetchData()
 }, [token])
 
-const newTeacherInfo = JSON.parse(window.localStorage.getItem('teacher-info'));
 
-const newTeacherData = newTeacherInfo.data
-
-console.log ("Sammy", newTeacherData)
 
 
   const handleSelectAll = (event) => {
@@ -140,7 +129,7 @@ console.log ("Sammy", newTeacherData)
               </TableRow>
             </TableHead>
             <TableBody>
-              {newTeacherData.slice(0, limit).map((customer) => (
+              {teacher.slice(0, limit).map((customer) => (
                 <TableRow
                   hover
                   key={customer.id}

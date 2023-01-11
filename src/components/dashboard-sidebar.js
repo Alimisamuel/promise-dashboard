@@ -112,8 +112,7 @@ export const DashboardSidebar = (props) => {
             }}
           
           >
-            {userInfo.admin.charAt(0)}
-           
+            {userInfo.data.fullName.charAt(0)}
           </Avatar>
                 <div>
                   <Typography variant='body1'>{userInfo.admin}</Typography>

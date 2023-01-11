@@ -22,7 +22,7 @@ export const DashboardNavbar = (props) => {
 
   const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
 
-  const avater = userInfo.admin.charAt(0)
+  const avater = userInfo.data.fullName.charAt(0)
 
   return (
     <>
@@ -89,7 +89,6 @@ export const DashboardNavbar = (props) => {
             
           >
             {avater}
-            
           </Avatar>
         </Toolbar>
       </DashboardNavbarRoot>

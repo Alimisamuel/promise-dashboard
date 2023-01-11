@@ -7,22 +7,10 @@ import { useEffect } from 'react';
 
 
 
-
-
-
-
-
-// const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));
-
 export const RegStudent = (props) => {
-
-    const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));
-    const newStudentData = newStudentInfo.data
-
-
+ const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));
 
   return(
-
   <Card
     sx={{ height: '100%' }}
     {...props}
@@ -46,7 +34,7 @@ export const RegStudent = (props) => {
             color="textPrimary"
             variant="h4"
           >
-            {newStudentData.length}
+            {newStudentInfo.data.length}
           </Typography>
         </Grid>
         <Grid item>
@@ -86,5 +74,4 @@ export const RegStudent = (props) => {
       </Box>
     </CardContent>
   </Card>
-);
-        }
+)}

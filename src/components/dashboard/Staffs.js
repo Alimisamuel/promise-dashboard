@@ -1,21 +1,18 @@
 import { Avatar, Box, Card, CardContent, Grid, Typography } from '@mui/material';
 import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 import PeopleIcon from '@mui/icons-material/PeopleOutlined';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 export const Staffs = (props) => {
 
   const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
   const token = userInfo.token
-  useEffect( ()=>{
 
-   
+const [staff,setStaff] = useState([])
+
+  useEffect( ()=>{
     async function FetchData(){
-    
-        // e.preventDefault();
-    
-         
-        let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
+        let result  = await fetch("https://alimisamuel.com/api/v1/teacher",{
           method:'GET',
           headers:{
              "Content-Type":"application/json ",
@@ -25,16 +22,11 @@ export const Staffs = (props) => {
          
         })
            const  res = await result.json()
-            console.log("result", res.data)
-            localStorage.setItem("teacher-info",JSON.stringify(res))
-      
+           setStaff(res.data)
     }
     FetchData()
     }, [token])
     
-    const newTeacherInfo = JSON.parse(window.localStorage.getItem('teacher-info'));
-    
-    const newTeacherData = newTeacherInfo.data
     
 return(
   <Card {...props}>
@@ -56,7 +48,7 @@ return(
             color="textPrimary"
             variant="h4"
           >
-            {newTeacherData.length}
+            {staff.length}
           </Typography>
         </Grid>
         <Grid item>

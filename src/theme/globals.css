@@ -1,0 +1,9 @@
+.login_background{
+background: url('../../public/login2.jpg');
+background-position: center;
+background-size: cover;
+
+}
+.tab{
+ margin-right: 50px !important;
+}

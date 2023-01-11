@@ -260,10 +260,7 @@ export const AccountProfileCreate = (props) => {
   const [password,setPassword] = useState('')
 
   const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
-  console.log(userInfo.token)
-
-
-  console.log(user)
+ 
 
 const route = useRouter()
 
@@ -288,9 +285,11 @@ const route = useRouter()
   }
   const handleStaff =  async () =>{
     // e.preventDefault();
+    const className = stuClass;
+    console.log(className)
 
-      let item = {firstName, lastName,email,password, number, state,DOB}
-    let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
+      let item = {firstName, lastName, email, password, className, number, state,DOB}
+    let result  = await fetch("https://alimisamuel.com/api/v1/teacher/register",{
       method:'POST',
       body: JSON.stringify(item),
       headers:{
@@ -818,6 +817,22 @@ const route = useRouter()
              
                 required
                
+                variant="outlined"
+              />
+            </Grid>
+            <Grid
+              item
+              md={6}
+              xs={12}
+            >
+              <TextField
+                fullWidth
+                label="Password"
+                name="password"
+               type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
                 variant="outlined"
               />
             </Grid>

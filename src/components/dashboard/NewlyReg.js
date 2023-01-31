@@ -6,6 +6,7 @@ import {
   Button,
   Card,
   CardHeader,
+  Skeleton,
   Table,
   TableBody,
   TableCell,
@@ -16,7 +17,7 @@ import {
 } from '@mui/material';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import { SeverityPill } from '../severity-pill';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 
 
@@ -26,9 +27,48 @@ import { useEffect } from 'react';
 
 
 export const NewlyReg = (props) => {
-  const newStudentInfo = JSON.parse(window.localStorage.getItem('student-info'));
-  const newStudentData = newStudentInfo.data
 
+  const url= "https://alimisamuel.com/api/v1/student";
+
+  const [loading, setLoading] = useState(true)
+  const [staff, setStaff] = useState([])
+  
+  
+  const USER =JSON.parse(window.localStorage.getItem('user-info')); 
+   
+  const token = USER.token
+  
+  const fetchStaff = async () =>{
+  
+  
+  
+    setLoading(true);
+    try{
+      const response = await fetch(url,  {
+        method:'GET',
+        headers:{
+          "Content-Type":"application/json",
+          "Accept": "application/json",
+          "Authorization": 'Bearer ' + token
+        },
+        }  )
+         const data = await response.json()
+        console.log(data)
+        setLoading(false)
+        setStaff(data)
+    } catch (err){
+  
+    }
+  
+   
+  };
+  
+  useEffect(()=>{
+    fetchStaff();
+  },[])
+
+  const studentList = staff.data ?? []
+  console.log(studentList)
   
   return(
   <Card {...props}>
@@ -62,34 +102,51 @@ export const NewlyReg = (props) => {
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody>
-            {newStudentData.map((order) => (
-              <TableRow
-                hover
-                key={order.id}
+      {
+        !loading &&
+        <TableBody>
+
+        
+        {studentList.map((order) => (
+          <TableRow
+            hover
+            key={order.id}
+          >
+            <TableCell>
+              {order.id}
+            </TableCell>
+            <TableCell>
+              {order.firstName} {order.surname}
+            </TableCell>
+            <TableCell>
+              {order.createdAt}
+            </TableCell>
+            <TableCell>
+              <SeverityPill
+                color={(order.status === 'Admitted' && 'success')
+                || (order.status === 'refunded' && 'error')
+                || 'warning'}
               >
-                <TableCell>
-                  {order.ref}
-                </TableCell>
-                <TableCell>
-                  {order.firstName} {order.surname}
-                </TableCell>
-                <TableCell>
-                  {order.createdAt}
-                </TableCell>
-                <TableCell>
-                  <SeverityPill
-                    color={(order.status === 'Admitted' && 'success')
-                    || (order.status === 'refunded' && 'error')
-                    || 'warning'}
-                  >
-                   Admitted
-                  </SeverityPill>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
+               Admitted
+              </SeverityPill>
+            </TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+      }
+        
         </Table>
+        {
+          loading &&
+          <>
+            <Skeleton variant='rectangular' height={50}  sx={{mb:1}}/>
+          <Skeleton variant='rectangular' height={50}  sx={{mb:2}}/>
+          <Skeleton variant='rectangular' height={80}  sx={{mb:2}}/>
+          </>
+        
+        }
+    
+    
       </Box>
     </PerfectScrollbar>
     <Box

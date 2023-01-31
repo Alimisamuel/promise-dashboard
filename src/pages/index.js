@@ -95,7 +95,7 @@ Current Term:
               </Typography>
               <Typography 
               variant='caption'>
-1st Term
+2nd Term
               </Typography>
             </Box>
             </Grid>

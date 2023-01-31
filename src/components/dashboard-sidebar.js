@@ -43,8 +43,13 @@ const items = [
 
 export const DashboardSidebar = (props) => {
 
-  const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
+  // const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
 
+  const USER =JSON.parse(window.localStorage.getItem('user-info')); 
+   
+  const info = USER.data
+
+  const avatar = info.fullName.charAt(0)
   const { open, onClose } = props;
   const router = useRouter();
   const lgUp = useMediaQuery((theme) => theme.breakpoints.up('lg'), {
@@ -112,11 +117,11 @@ export const DashboardSidebar = (props) => {
             }}
           
           >
-            {userInfo.admin.charAt(0)}
+            {avatar}
            
           </Avatar>
                 <div>
-                  <Typography variant='body1'>{userInfo.admin}</Typography>
+                  <Typography variant='body1'>{info.fullName}</Typography>
                 </div>
               
             

@@ -19,10 +19,13 @@ export const DashboardNavbar = (props) => {
   const { onSidebarOpen, ...other } = props;
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
+  const USER =JSON.parse(window.localStorage.getItem('user-info')); 
+   
+  const info = USER.data
 
-  const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
+  // const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
 
-  const avater = userInfo.admin.charAt(0)
+  const avater = info.fullName.charAt(0)
 
   return (
     <>

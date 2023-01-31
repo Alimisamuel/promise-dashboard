@@ -1,7 +1,9 @@
 import Head from 'next/head';
 import NextLink from 'next/link';
 import Router from 'next/router';
-import { Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Container, Grid, Link, TextField, Typography } from '@mui/material';
+import { LoadingButton } from '@mui/lab';
+import SaveIcon from '@mui/icons-material/Save';
 import Image from 'next/image';
 import logo from '../../public/static/logo.png'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
@@ -18,12 +20,15 @@ const Login = () => {
   const router = useRouter()
   const [email,setEmail] = useState("")
   const [password,setPassword] = useState("")
+  const [ error, setError] = useState(null)
+  const [isPending, setIsPending] = useState(false)
  
 const handleLogin =  async (e) =>{
   e.preventDefault();
+  setIsPending(true)
   try {
     let item = {email,password}
-  let result  = await fetch("https://alimisamuel.com/api/v1/admin/login",{
+  let result  = await fetch("https://pigeonne.alimisamuel.com/api/v1/admin/login",{
     method:'POST',
     headers:{
        "Content-Type":"application/json ",
@@ -43,9 +48,7 @@ const stat = res.status;
 // console.log(stat)
 
 if (stat == "success"){
-
-  FetchData()
-  FetchDataTeacher()
+  setIsPending(false)
 setTimeout(() =>{
 
   router.push('/')
@@ -53,15 +56,19 @@ setTimeout(() =>{
 
 }
 else{
-  alert("Incorrect Login Details")
-  router.push('/login')
 
+
+  setError("Incorrect Login Details")
+  router.push('/login')
+  setIsPending(false)
 }
 
  
   
-} catch (error) {
-  console.log(error)
+} catch (err) {
+ 
+  setError(err)
+  setIsPending(false)
 }
 
 }
@@ -71,53 +78,53 @@ else{
 
 
 
-async function FetchData(){
-  const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
+// async function FetchData(){
+  // const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
 
-  const token = userInfo.token
+  // const token = userInfo.token
 
     // e.preventDefault();
 
      
-    let result  = await fetch("https://alimisamuel.com/api/v1/student",{
-      method:'GET',
-      headers:{
-         "Content-Type":"application/json ",
-         "Accept":"applicaation/json",
-        "Authorization":  'Bearer ' +  token
-      } ,
+//     let result  = await fetch("https://alimisamuel.com/api/v1/student",{
+//       method:'GET',
+//       headers:{
+//          "Content-Type":"application/json ",
+//          "Accept":"applicaation/json",
+//         "Authorization":  'Bearer ' +  token
+//       } ,
      
-    })
-       const  res = await result.json()
-        console.log("result", res.data)
-        localStorage.setItem("student-info",JSON.stringify(res))
+//     })
+//        const  res = await result.json()
+//         console.log("result", res.data)
+//         localStorage.setItem("student-info",JSON.stringify(res))
   
-}
+// }
 
 
 
 
    
-  async function FetchDataTeacher(){
-    const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
-const token = userInfo.token
-      // e.preventDefault();
+//   async function FetchDataTeacher(){
+//     const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
+// const token = userInfo.token
+//       // e.preventDefault();
   
        
-      let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
-        method:'GET',
-        headers:{
-           "Content-Type":"application/json ",
-           "Accept":"applicaation/json",
-          "Authorization":  'Bearer ' +  token
-        } ,
+//       let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
+//         method:'GET',
+//         headers:{
+//            "Content-Type":"application/json ",
+//            "Accept":"applicaation/json",
+//           "Authorization":  'Bearer ' +  token
+//         } ,
        
-      })
-         const  res = await result.json()
-          console.log("result", res.data)
-          localStorage.setItem("teacher-info",JSON.stringify(res))
+//       })
+//          const  res = await result.json()
+//           console.log("result", res.data)
+//           localStorage.setItem("teacher-info",JSON.stringify(res))
     
-  }
+//   }
 
 
 
@@ -192,7 +199,7 @@ const token = userInfo.token
             </Grid>
             </Grid>
             </Box>
-    
+            {error && <Alert severity="error">Invalid account details</Alert>} 
             <TextField
           onChange={(e)=>setEmail(e.target.value)}
               fullWidth
@@ -218,16 +225,15 @@ onChange={(e)=>setPassword(e.target.value)}
               variant="outlined"
             />
             <Box sx={{ py: 2 }}>
-              <Button
-                color="primary"
-                onClick={handleLogin}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
-                Sign In Now
-              </Button>
+            {!isPending && 
+      <LoadingButton fullWidth size="large" type="submit" onClick={handleLogin} variant="contained">
+        Login
+      </LoadingButton>}
+{isPending && 
+      <LoadingButton   loading
+      loadingPosition="start"      startIcon={<SaveIcon />} fullWidth size="large" type="submit" variant="contained" disabled >
+        Loging in
+      </LoadingButton>}
             </Box>
             <Typography
               color="textSecondary"

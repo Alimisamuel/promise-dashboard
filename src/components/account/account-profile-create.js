@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/router';
 import {
+  Alert,
   Box,
   Button,
   Card,
@@ -12,7 +13,9 @@ import {
   TextField
 } from '@mui/material';
 import { Container } from '@mui/system';
-import { WindowSharp } from '@mui/icons-material';
+import SaveIcon from '@mui/icons-material/Save';
+import { Token, WindowSharp } from '@mui/icons-material';
+import { LoadingButton } from '@mui/lab';
 const users =[
 
   {
@@ -241,6 +244,14 @@ const states = [
 ];
 
 export const AccountProfileCreate = (props) => {
+
+  const USER =JSON.parse(window.localStorage.getItem('user-info')); 
+   
+  const token = USER.token
+
+
+  const [error, setError] = useState(null)
+  const [loading, setLoading] = useState(false)
   const [user, setUser] = useState('')
   const [firstName, setFirstName] = useState('')
   const [surname, setSurName] = useState('')
@@ -257,70 +268,94 @@ export const AccountProfileCreate = (props) => {
   const [lGA, setLGA] = useState('')
   const [yoa, setYoa] = useState('')
   const [teacher_id, setTeacher_id] = useState('')
+  const [success, setSuccess] = useState(false)
+  const [ successTeacher, setSuccessTeacher] = useState(false)
 
-  const userInfo = JSON.parse(window.localStorage.getItem('user-info'));
-  console.log(userInfo.token)
 
 
-  console.log(user)
+
+
+  console.log(token)
 
 const route = useRouter()
 
-
   const handleStudent =  async () =>{
+    setLoading(true)
     // e.preventDefault();
 
+    try{
       let item = {firstName, surname, phoneNumber, state, teacher_id, DOB}
-    let result  = await fetch("https://alimisamuel.com/api/v1/student",{
-      method:'POST',
-      body: JSON.stringify(item),
-      headers:{
-         "Content-Type":"application/json ",
-         "Accept":"applicaation/json",
-        "Authorization":  'Bearer ' +  userInfo.token
-      } ,
-     
-    })
-        result = await result.json()
-        console.log("result", result)
+      let result  = await fetch(" https://pigeonne.alimisamuel.com/api/v1/student",{
+        method:'POST',
+        body: JSON.stringify(item),
+        headers:{
+           "Content-Type":"application/json ",
+           "Accept":"applicaation/json",
+          "Authorization":  'Bearer ' +  token
+        } ,
+       
+      })
+      result = await result.json()
+      console.log("result", result)
+      setSuccess(true)
+          setLoading(false)
+    } catch(err){
+setError(err)
+setLoading(false)
+    }
+
+ 
       
   
   }
   const handleStaff =  async () =>{
+    setLoading(true)
     // e.preventDefault();
-
+    try{
       let item = {firstName, lastName,email, number, state, teacher_id, DOB}
-    let result  = await fetch("https://alimisamuel.com/api/v1/staff",{
+    let result  = await fetch("https://pigeonne.alimisamuel.com/api/v1/teacher/register",{
       method:'POST',
       body: JSON.stringify(item),
       headers:{
          "Content-Type":"application/json ",
          "Accept":"applicaation/json",
-        "Authorization":  'Bearer ' +  userInfo.token
+        "Authorization":  'Bearer ' +  token
       } ,
+
      
     })
+    console.log(token)
         result = await result.json()
         console.log("result", result)
+        // window.alert("Staff Created Successfully with the following details" + "\n" + "Name:" +" " + firstName + " " + lastName + "\n" + "Email:" + " " + number)
+        //   window.location.reload(true)
+          setLoading(false)
+          setSuccessTeacher(true)
+          setFirstName("")
+          setLastName("")
+          setSurName("")
+          setNumber("")
+          setEmail("")
+          
+    } catch (err){
 
-        if (result.status == "success"){
-          window.alert("Staff Created Successfully with the following details" + "\n" + "Name:" +" " + firstName + " " + lastName + "\n" + "Email:" + " " + number)
-          window.location.reload(true)
-
-
-        }
-        else{
-          alert("Failed: check details ---- Email must be unique")
-        }
+      setLoading(false)
+      setError("Couldnt create staff")
+    }
+    
       
   
   }
   
   return (
+    <>
+    {!error ==  null && <Alert severity='error'>{error}</Alert>}
+    {success && <Alert severity='success'>Student created successfully</Alert>}
+    {successTeacher && <Alert severity='success'>Teacher created successfully</Alert>}
     <form
-      autoComplete="off"
-      noValidate
-      {...props}
+    autoComplete="off"
+    noValidate
+    {...props}
     >
       <Card >
         < Box sx={{bgcolor:'#e8e9eb', pb:3}}>
@@ -328,6 +363,7 @@ const route = useRouter()
           subheader="The information can be edited"
           title="Profile"
         />
+    
         <Container>
           <TextField
               fullWidth
@@ -544,7 +580,7 @@ const route = useRouter()
                 fullWidth
                 size='small'
                 type="number"
-                label="Last School Attended"
+                label="Teacher's ID"
                 
                 onChange={(e)=>setTeacher_id(e.target.value)}
                 required
@@ -563,7 +599,7 @@ const route = useRouter()
 
 
 
-
+{/* 
           <Divider>PARENT/GUARDIANS INFORMATIONS</Divider>
         <CardContent>
           <Grid
@@ -653,11 +689,11 @@ const route = useRouter()
             </Grid>
          
           </Grid>
-        </CardContent>
+        </CardContent> */}
 
 {/* ................////////////////////////////.......................................///////////////////////........... */}
 
-
+{/* 
           <Divider>MORE INFORMATIONS</Divider>
         <CardContent>
           <Grid
@@ -717,7 +753,7 @@ const route = useRouter()
          
           </Grid>
         </CardContent>
-        <Divider />
+        <Divider /> */}
 
         <Box
           sx={{
@@ -726,13 +762,15 @@ const route = useRouter()
             p: 2
           }}
         >
-          <Button
-          onClick={handleStudent}
-            color="primary"
-            variant="contained"
-          >
-            Create Student
-          </Button>
+                     {!loading && 
+      <LoadingButton fullWidth size="large" type="submit" onClick={handleStudent} variant="contained">
+        Create Student
+      </LoadingButton>}
+{loading && 
+      <LoadingButton   loading
+      loadingPosition="start"      startIcon={<SaveIcon />} fullWidth size="large" type="submit" variant="contained" disabled >
+        Creating Student
+      </LoadingButton>}
         </Box>
         </>
 
@@ -860,18 +898,21 @@ const route = useRouter()
             p: 2
           }}
         >
-          <Button
-          onClick={handleStaff}
-            color="primary"
-            variant="contained"
-          >
-            Create Teacher
-          </Button>
+              {!loading && 
+      <LoadingButton fullWidth size="large" type="submit" onClick={handleStaff} variant="contained">
+        Create Staff
+      </LoadingButton>}
+{loading && 
+      <LoadingButton   loading
+      loadingPosition="start"      startIcon={<SaveIcon />} fullWidth size="large" type="submit" variant="contained" disabled >
+        Creating Staff
+      </LoadingButton>}
         </Box>
         </>
 
         }
       </Card>
     </form>
+    </>
   );
 };

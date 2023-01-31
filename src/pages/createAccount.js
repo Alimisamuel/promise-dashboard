@@ -9,7 +9,7 @@ const Page = () => (
   <>
     <Head>
       <title>
-        Account | Material Kit
+        Account | Promise Intertional School
       </title>
     </Head>
     <Box
